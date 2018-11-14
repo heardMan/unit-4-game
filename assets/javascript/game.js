@@ -5,6 +5,7 @@ var game = {
         playerCharacterHP: null,
         playerCharacterBaseAttack: null,
         playerCharacterAttack: null,
+
         currentEnemyCode: null,
         currentEnemyName: null,
         currentEnemyHP: null,
@@ -24,7 +25,7 @@ var game = {
             code: "obiWanKenobi",
             healthPoints: 120,
             attackPower: 8,
-            counterAttackPower: 10,
+            counterAttackPower: 8,
         },
         {
             name: "Vader",
@@ -96,44 +97,19 @@ var game = {
                 var charCode = game.characters[i].code;
                 var charName = game.characters[i].name;
                 var charHP = game.characters[i].healthPoints;
+                $("#selectElemTitle").text("Choose Your Character");
 
                 this.createCharacterCard(charCode, charName, charHP);
                 
             }
             
         },
-        characterSelect : function () {
-            
+        playerSelect : function () { 
             $(".char-container").on("click",function (){
-                if  (game.data.currentEnemyCode === null && game.data.playerCharacterCode != null) {
-                    game.data.currentEnemyCode = this.id;
-                    for ( var i = 0; i < game.characters.length; i++ ) {
-                        var enemyCode = game.characters[i].code;
-                        if ( enemyCode === game.data.currentEnemyCode ) {
-                            game.data.currentEnemyName = game.characters[i].name;
-                            game.data.currentEnemyHP = game.characters[i].healthPoints;
-                            game.data.currentEnemyCounterAttack = game.characters[i].counterAttackPower;
-                            console.log("Enemy Name: "+game.data.currentEnemyName+", HP: "+game.data.currentEnemyHP+", Attack: "+game.data.currentEnemyCounterAttack);
-                        }
-                    }
-                    
-
-                    $("#"+game.data.currentEnemyCode).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
-                    $("#"+game.data.currentEnemyCode).appendTo("#defenderElem");
-                    $("#selectElemTitle").text("Enemies Remaining");
-                    var fightButton = $("button");
-                    fightButton.attr("id", "fight-button");
-                    fightButton.attr("data-toggle", "none");
-                    fightButton.attr("data-target", "none");
-                    fightButton.attr("onClick", game.functions.attack());
-                    fightButton.attr("class", "btn btn-primary btn-block");
-                    fightButton.text("Attack");
-                    $("#fightElem").append(fightButton);
-                } else if (game.data.playerCharacterCode === null){
+                if (game.data.playerCharacterCode === null){
                     
                     game.data.playerCharacterCode = this.id;
                     
-                    //console.log(playerChar);
                     $("#"+game.data.playerCharacterCode).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
                     $("#"+game.data.playerCharacterCode).appendTo("#playerElem");
                     for (var i = 0; i < game.characters.length; i++) {
@@ -147,29 +123,77 @@ var game = {
                             console.log("Character Name: "+game.data.playerCharacterName+", HP: "+game.data.playerCharacterHP+", Attack: "+game.data.playerCharacterAttack);
                         
                         } else {
+                            
                             $("#card-"+charCode).attr("class", "char-Card card h-100 my-2 text-center border-thick border-danger rounded-0");
                             $("#"+charCode).appendTo("#enemyElem");
                             
                         }
                     } 
-                    $("#selectElemTitle").text("Choose Your Enemy");
-                    $("#selectElem").hide();
+                    $("#selectElemTitle").text("Choose An Opponent");
+                    $("#selectElem").remove();
                 }
-                
-                //
             })
         
         },
-        attack : function () {
-                var enemy = game.data.currentEnemyCode;
-                var enemyHP = game.data.currentEnemyHP;
-                var enemyCounterAttack = game.data.currentEnemyCounterAttack;
-                var player = game.data.playerCharacterCode;
-                var playerHP = game.data.playerCharacterHP;
-                var playerBaseAttack = game.data.playerCharacterBaseAttack;
-                var playerAttack = game.data.playerCharacterAttack;
+        enemySelect: function () {
+            $(".char-container").on("click",function (){
+                if (game.data.currentEnemyCode === null && game.data.playerCharacterCode !== null && this.id !== game.data.playerCharacterCode){
+                    game.data.currentEnemyCode = this.id;
+                    $("#"+game.data.currentEnemyCode).attr("class", "col-sm-6 col-md-2 mx-md-auto char-container");
+                    $("#"+game.data.currentEnemyCode).appendTo("#defenderElem");
+                    for (var i = 0; i < game.characters.length; i++) {
+                        var charCode = game.characters[i].code;
+                        if(charCode === game.data.currentEnemyCode){
+                            game.data.currentEnemyName = game.characters[i].name;
+                            game.data.currentEnemyHP = game.characters[i].healthPoints;
+                            game.data.currentEnemyCounterAttack = game.characters[i].counterAttackPower;
+                            console.log("Character Name: "+game.data.currentEnemyName+", HP: "+game.data.currentEnemyHP+", Attack: "+game.data.currentEnemyCounterAttack);
+                            console.log(game.data.currentEnemyCode);
+                        } 
+                    } 
+                    game.functions.createAttackButton();
+                }
+            })
+        },
+        enemyReset: function () {
+            game.data.currentEnemyCode = null;
+            game.data.currentEnemyName = null;
+            game.data.currentEnemyHP = null;
+            game.data.currentEnemyCounterAttack = null;
+        },
+        createAttackButton: function () {
+            if($("#fight-button").length) {
+                $("#fight-button").show();
+            } else {
+            $("#"+game.data.currentEnemyCode).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
+                    $("#"+game.data.currentEnemyCode).appendTo("#defenderElem");
+                    $("#selectElemTitle").text("Enemies Remaining");
+                    var fightButton = $("button");
+                    fightButton.attr("id", "fight-button");
+                    fightButton.attr("data-toggle", "none");
+                    fightButton.attr("data-target", "none");
+                    fightButton.attr("onClick", game.functions.attack());
+                    fightButton.attr("class", "btn btn-primary btn-block");
+                    fightButton.text("Attack");
+                    $("#fightElem").append(fightButton);
+            }
+        },
+        
+        attack : function () {    
+            var player = game.data.playerCharacterCode;
+            var playerHP = game.data.playerCharacterHP;
+            var playerBaseAttack = game.data.playerCharacterBaseAttack;
+            var playerAttack = game.data.playerCharacterAttack;
+            var playerName = game.data.playerName;
+            var enemyHP = game.data.currentEnemyHP;
+            
                 
             $("#fight-button").on("click", function () {
+                var enemy = game.data.currentEnemyCode;
+                var enemyCounterAttack = game.data.currentEnemyCounterAttack;
+                var enemyName = game.data.currentEnemyName;
+
+                
                 enemyHP += -playerAttack;
                 playerHP += -enemyCounterAttack;
                 playerAttack += playerBaseAttack;
@@ -177,12 +201,30 @@ var game = {
                 console.log(enemy+", HP: "+enemyHP+", Attack: "+enemyCounterAttack);
                 console.log(player+", HP: "+playerHP+", Attack: "+playerAttack);                
                 
+                if (enemyHP <= 0) {
+                    enemyHP = 0;
+                    $("#charCardHP-"+enemy).text(enemyHP);
+                    $("#charCardHP-"+player).text(playerHP);
+                    alert(player+" WINS!!!");
+                    $("#"+enemy).remove();
+                    $("#fight-button").hide();
+                    game.functions.enemyReset(); 
+                    console.log(enemy);                   
+                } else if (playerHP <= 0) {
+                    playerHP = 0;
+                    $("#charCardHP-"+enemy).text(enemyHP);
+                    $("#charCardHP-"+player).text(playerHP);
+                    alert(enemyName+" WINS!!!");
+                } else {             
+                    $("#charCardHP-"+enemy).text(enemyHP);
+                    $("#charCardHP-"+player).text(playerHP);
+                }
+
+                console.log(enemy+enemyHP+enemyCounterAttack+enemyName);
                 
             })
         },
-        printFightStatus: function () {
-
-        },
+        
         
     }
 }
@@ -211,7 +253,8 @@ var game = {
 $(document).ready(function(){
     
     game.functions.charsToSelectElem();
-    game.functions.characterSelect();
+    game.functions.enemySelect();
+    game.functions.playerSelect();
     game.functions.attack();
    
 });

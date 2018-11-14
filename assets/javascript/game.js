@@ -1,16 +1,19 @@
 var game = {
     data : {
-        playerCharacterCode: null,
-        playerCharacterName: null,
-        playerCharacterHP: null,
-        playerCharacterBaseAttack: null,
-        playerCharacterAttack: null,
-
-        currentEnemyCode: null,
-        currentEnemyName: null,
-        currentEnemyHP: null,
-        currentEnemyCounterAttack: null,
-        
+        playerCharacter: {
+            code: null,
+            name: null,
+            hp: null,
+            attack: null,
+            baseAttack: null,
+        },
+        currentEnemy: {
+            code: null,
+            name: null,
+            hp: null,
+            attack: null,
+            
+        },
     },
     characters : [
         {
@@ -106,21 +109,21 @@ var game = {
         },
         playerSelect : function () { 
             $(".char-container").on("click",function (){
-                if (game.data.playerCharacterCode === null){
+                if (game.data.playerCharacter.code === null){
                     
-                    game.data.playerCharacterCode = this.id;
+                    game.data.playerCharacter.code = this.id;
                     
-                    $("#"+game.data.playerCharacterCode).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
-                    $("#"+game.data.playerCharacterCode).appendTo("#playerElem");
+                    $("#"+game.data.playerCharacter.code).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
+                    $("#"+game.data.playerCharacter.code).appendTo("#playerElem");
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
-                        if(charCode === game.data.playerCharacterCode){
-                            game.data.playerCharacterName = game.characters[i].name;
-                            game.data.playerCharacterHP = game.characters[i].healthPoints;
-                            game.data.playerCharacterAttack = game.characters[i].attackPower;
-                            game.data.playerCharacterBaseAttack = game.characters[i].attackPower;
+                        if(charCode === game.data.playerCharacter.code){
+                            game.data.playerCharacter.name = game.characters[i].name;
+                            game.data.playerCharacter.hp = game.characters[i].healthPoints;
+                            game.data.playerCharacter.attack = game.characters[i].attackPower;
+                            game.data.playerCharacter.baseAttack = game.characters[i].attackPower;
 
-                            console.log("Character Name: "+game.data.playerCharacterName+", HP: "+game.data.playerCharacterHP+", Attack: "+game.data.playerCharacterAttack);
+                            console.log("Character Name: "+game.data.playerCharacter.name+", HP: "+game.data.playerCharacter.hp+", Attack: "+game.data.playerCharacter.attack);
                         
                         } else {
                             
@@ -137,18 +140,18 @@ var game = {
         },
         enemySelect: function () {
             $(".char-container").on("click",function (){
-                if (game.data.currentEnemyCode === null && game.data.playerCharacterCode !== null && this.id !== game.data.playerCharacterCode){
-                    game.data.currentEnemyCode = this.id;
-                    $("#"+game.data.currentEnemyCode).attr("class", "col-sm-6 col-md-2 mx-md-auto char-container");
-                    $("#"+game.data.currentEnemyCode).appendTo("#defenderElem");
+                if (game.data.currentEnemy.code === null && game.data.playerCharacter.code !== null && this.id !== game.data.playerCharacter.code){
+                    game.data.currentEnemy.code = this.id;
+                    $("#"+game.data.currentEnemy.code).attr("class", "col-sm-6 col-md-2 mx-md-auto char-container");
+                    $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
-                        if(charCode === game.data.currentEnemyCode){
-                            game.data.currentEnemyName = game.characters[i].name;
-                            game.data.currentEnemyHP = game.characters[i].healthPoints;
-                            game.data.currentEnemyCounterAttack = game.characters[i].counterAttackPower;
-                            console.log("Character Name: "+game.data.currentEnemyName+", HP: "+game.data.currentEnemyHP+", Attack: "+game.data.currentEnemyCounterAttack);
-                            console.log(game.data.currentEnemyCode);
+                        if(charCode === game.data.currentEnemy.code){
+                            game.data.currentEnemy.name = game.characters[i].name;
+                            game.data.currentEnemy.hp = game.characters[i].healthPoints;
+                            game.data.currentEnemy.attack = game.characters[i].counterAttackPower;
+                            console.log("Character Name: "+game.data.currentEnemy.name+", HP: "+game.data.currentEnemy.hp+", Attack: "+game.data.currentEnemy.attack);
+                            console.log(game.data.currentEnemy.code);
                         } 
                     } 
                     game.functions.createAttackButton();
@@ -156,17 +159,17 @@ var game = {
             })
         },
         enemyReset: function () {
-            game.data.currentEnemyCode = null;
-            game.data.currentEnemyName = null;
-            game.data.currentEnemyHP = null;
-            game.data.currentEnemyCounterAttack = null;
+            game.data.currentEnemy.code = null;
+            game.data.currentEnemy.name = null;
+            game.data.currentEnemy.hp = null;
+            game.data.currentEnemy.attack = null;
         },
         createAttackButton: function () {
             if($("#fight-button").length) {
                 $("#fight-button").show();
             } else {
-            $("#"+game.data.currentEnemyCode).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
-                    $("#"+game.data.currentEnemyCode).appendTo("#defenderElem");
+            $("#"+game.data.currentEnemy.code).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
+                    $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
                     $("#selectElemTitle").text("Enemies Remaining");
                     var fightButton = $("button");
                     fightButton.attr("id", "fight-button");
@@ -180,18 +183,18 @@ var game = {
         },
         
         attack : function () {    
-            var player = game.data.playerCharacterCode;
-            var playerHP = game.data.playerCharacterHP;
-            var playerBaseAttack = game.data.playerCharacterBaseAttack;
-            var playerAttack = game.data.playerCharacterAttack;
+            var player = game.data.playerCharacter.code;
+            var playerHP = game.data.playerCharacter.hp;
+            var playerBaseAttack = game.data.playerCharacter.baseAttack;
+            var playerAttack = game.data.playerCharacter.attack;
             var playerName = game.data.playerName;
-            var enemyHP = game.data.currentEnemyHP;
+            var enemyHP = game.data.currentEnemy.hp;
             
                 
             $("#fight-button").on("click", function () {
-                var enemy = game.data.currentEnemyCode;
-                var enemyCounterAttack = game.data.currentEnemyCounterAttack;
-                var enemyName = game.data.currentEnemyName;
+                var enemy = game.data.currentEnemy.code;
+                var enemyCounterAttack = game.data.currentEnemy.attack;
+                var enemyName = game.data.currentEnemy.name;
 
                 
                 enemyHP += -playerAttack;

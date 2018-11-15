@@ -59,7 +59,7 @@ var game = {
             var charCardFooter = $("<div>"); 
             var charCardHP = $("<div>"); 
             //create column to hold character card
-            charContainer.attr("class", "col-sm-6 col-md-2   char-container");
+            charContainer.attr("class", "col-6 col-sm-3 my-3 char-container");
             charContainer.attr("id", code);
             $("#selectElem").append(charContainer);
             //create character card
@@ -101,50 +101,65 @@ var game = {
                 var charName = game.characters[i].name;
                 var charHP = game.characters[i].healthPoints;
                 $("#selectElemTitle").text("Choose Your Character");
-
+                //create character cards
                 this.createCharacterCard(charCode, charName, charHP);
 
             }
             
         },
         playerSelect : function () { 
+            //handle user clicking on player container
             $(".char-container").on("click",function (){
+                //check to see if user has already selected their player
                 if (game.data.playerCharacter.code === null){
+                    //assign user player based on user input
                     var selectedPlayerCode = this.id
                     game.data.playerCharacter.code = selectedPlayerCode;
-                    
-                    $("#"+game.data.playerCharacter.code).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
+                    //move selected player card to to player character container and adjust styling
+                    $("#"+game.data.playerCharacter.code).attr("class", "col-6 col-sm-3 mx-md-auto char-container");
                     $("#"+game.data.playerCharacter.code).appendTo("#playerElem");
-
+                    //loop through array to populate the player character and enemy character elements
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
+                        //match selected charecter
                         if(charCode === game.data.playerCharacter.code){
+                            //populate player character stats to game data object
                             game.data.playerCharacter.name = game.characters[i].name;
                             game.data.playerCharacter.hp = game.characters[i].healthPoints;
                             game.data.playerCharacter.attack = game.characters[i].attackPower;
                             game.data.playerCharacter.baseAttack = game.characters[i].attackPower;
-
                             console.log("Character Name: "+game.data.playerCharacter.name+", HP: "+game.data.playerCharacter.hp+", Attack: "+game.data.playerCharacter.attack);
                             
                         } else {
-                            
+                            //move nonselected players to enemy and adjust styling
                             $("#card-"+charCode).attr("class", "char-Card card h-100 my-2 text-center border-thick border-danger rounded-0");
                             $("#"+charCode).appendTo("#enemyElem");
                             
                         }
                     }
+                    //
                     $("#selectElemTitle").text("Choose An Opponent");
-                    //$("#selectElem").remove();
                 }
             })
         
         },
+        playerReset: function () {
+            game.data.playerCharacter.code = null;
+            game.data.playerCharacter.name = null;
+            game.data.playerCharacter.hp = null;
+            game.data.playerCharacter.attack = null;
+            game.data.playerCharacter.baseAttack = null;
+        },
         enemySelect: function () {
             $(".char-container").on("click",function (){
                 if (game.data.currentEnemy.code === null && game.data.playerCharacter.code !== null && this.id !== game.data.playerCharacter.code){
+                    
+                $("#selectElemTitle").text("Enemies Remaining");
                     game.data.currentEnemy.code = this.id;
-                    $("#"+game.data.currentEnemy.code).attr("class", "col-sm-6 col-md-2 mx-md-auto char-container");
+                    $("#"+game.data.currentEnemy.code).attr("class", "col-6 col-sm-3 mx-md-auto char-container");
                     $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
+                    $("#enemyElem").hide();
+                    $("#selectElemTitle").hide();
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
                         if(charCode === game.data.currentEnemy.code){
@@ -165,34 +180,56 @@ var game = {
             game.data.currentEnemy.hp = null;
             game.data.currentEnemy.attack = null;
         },
-        playerReset: function () {
-            game.data.playerCharacter.code = null;
-            game.data.playerCharacter.name = null;
-            game.data.playerCharacter.hp = null;
-            game.data.playerCharacter.attack = null;
-            game.data.playerCharacter.baseAttack = null;
-        },
+        
         gameReset: function () {
-            game.functions.enemyReset();
-            game.functions.playerReset();
-            console.log("WOW");
+            //$('#reset-button').click(function() {
+                location.reload();
+            //});
+            //game.functions.enemyReset();
+            //game.functions.playerReset();
+            //$("#playerElem").empty();
+            //$("#defenderElem").empty();
+            //$("#enemyElem").empty();
+            //game.functions.charsToSelectElem();
+            //$("#reset-button").hide()
+            //console.log("WOW");
+        },
+        createResetButton: function () {
+             
+            $("#selectElemTitle").text("Great game... How 'bout another?");
+            var reset = $("<button>");
+            reset.attr("id", "reset-button");
+            reset.attr("data-toggle", "none");
+            reset.attr("data-target", "none");
+            reset.attr("onClick", "game.functions.gameReset()");
+            reset.attr("class", "btn btn-primary btn-block");
+            reset.text("Play Again");
+            $("#fightElem").append(reset);
         },
         createAttackButton: function () {
+            
             if($("#fight-button").length) {
+                
                 $("#fight-button").show();
+
             } else {
-            $("#"+game.data.currentEnemy.code).attr("class", "col-sm-6 col-md-2 mx-md-auto  char-container");
-                    $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
-                    $("#selectElemTitle").text("Enemies Remaining");
-                    var fightButton = $("button");
-                    fightButton.attr("id", "fight-button");
-                    fightButton.attr("data-toggle", "none");
-                    fightButton.attr("data-target", "none");
-                    fightButton.attr("onClick", game.functions.attack());
-                    fightButton.attr("class", "btn btn-primary btn-block");
-                    fightButton.text("Attack");
-                    $("#fightElem").append(fightButton);
+                $("#"+game.data.currentEnemy.code).attr("class", "col-6 col-sm-3 mx-md-auto char-container");
+                $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
+                var fightButton = $("<button>");
+                fightButton.attr("id", "fight-button");
+                fightButton.attr("data-toggle", "none");
+                fightButton.attr("data-target", "none");
+                fightButton.attr("onClick", "game.functions.attack()");
+                fightButton.attr("class", "btn btn-primary btn-block");
+                fightButton.text("Attack");
+                $("#fightElem").append(fightButton);
+                
             }
+        },
+        checkWin: function () {
+            if ($('#enemyElem').is(':empty')){
+                game.functions.createResetButton();
+              }
         },
         attack : function () {    
             var player = game.data.playerCharacter.code;
@@ -200,18 +237,15 @@ var game = {
             var playerBaseAttack = game.data.playerCharacter.baseAttack;
             var playerAttack = game.data.playerCharacter.attack;
             var playerName = game.data.playerName;
-            //var enemyHP = game.data.currentEnemy.hp;
-            
                 
-            $("#fight-button").on("click", function () {
+            //$("#fight-button").on("click", function () {
                 var enemy = game.data.currentEnemy.code;
                 var enemyCounterAttack = game.data.currentEnemy.attack;
                 var enemyName = game.data.currentEnemy.name;
 
-                
                 game.data.currentEnemy.hp += -playerAttack;
-                playerHP += -enemyCounterAttack;
-                playerAttack += playerBaseAttack;
+                game.data.playerCharacter.hp += -enemyCounterAttack;
+                game.data.playerCharacter.attack += playerBaseAttack;
 
                 console.log(enemy+", HP: "+game.data.currentEnemy.hp+", Attack: "+enemyCounterAttack);
                 console.log(player+", HP: "+playerHP+", Attack: "+playerAttack);                
@@ -224,58 +258,35 @@ var game = {
                     alert(player+" WINS!!!");
                     $("#"+enemy).remove();
                     $("#fight-button").hide();
-                    game.functions.enemyReset(); 
+                    $("#enemyElem").show();
+                    $("#selectElemTitle").show();
+                    game.functions.checkWin();
                     console.log(enemy);                   
                 } else if (playerHP <= 0) {
                     playerHP = 0;
                     $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
                     $("#charCardHP-"+player).text(playerHP);
-                    //alert(enemyName+" WINS!!!");
-                    $("#fight-button").hide();
-                   
-                    
+                    alert(enemyName+" WINS!!!");
+                    $("#fight-button").remove();
+                    game.functions.createResetButton();
                 } else {             
                     $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
                     $("#charCardHP-"+player).text(playerHP);
-                    $("#statusElem")
+                    $("#playerStats").text("You attacked "+enemyName+" for "+playerAttack+" damage.");
+                    $("#enemyStats").text(enemyName+" attacked you back for "+enemyCounterAttack+" damage.");
                 }
-
-                //console.log(enemy+game.data.currentEnemy.hp+enemyCounterAttack+enemyName);
                 
-            })
+            //})
         },
-        
-        
         
     }
 }
-
-//player character moves to playerElem
-//nonselected players move to enemyElem 
-
-//player selects enemy 
-//selected enemy moves to defenderElem
-//attack button in fightElem becomes active
-
-//player clicks attack button
-//defender HP decreases
-//player attackPower increases by base power
-//defender counter attacks -- player HP decreases
-//status elem displays players attack and defenders counter attack
-
-//defender HP reaches 0
-//enemy is removed from screen
-//message displays to choose a new enemy
-
-//player HP reaches 0
-//game over message displays in statusElem
-//Restart button becomes visible
 
 $(document).ready(function(){
     
     game.functions.charsToSelectElem();
     game.functions.enemySelect();
     game.functions.playerSelect();
-    game.functions.attack();
+    //game.functions.attack();
    
 });

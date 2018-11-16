@@ -12,7 +12,6 @@ var game = {
             name: null,
             hp: null,
             attack: null,
-            
         },
     },
     characters : [
@@ -46,6 +45,74 @@ var game = {
         }
     ],
     functions : { 
+        gameinit: function () {
+            var pageContainer = $("<div>");
+            pageContainer.attr("id", "pageContainer");
+            pageContainer.attr("class", "container-fluid px-0");
+            $("body").append(pageContainer);
+
+            var navBar = $("<nav>");
+            navBar.attr("id", "navBar");
+            navBar.attr("class", "navbar navbar-light bg-light");
+            $(pageContainer).append(navBar);
+
+            var navTitle = $("<a>");
+            navTitle.attr("id", "navTitle");
+            navTitle.attr("class", "navbar-brand");
+            navTitle.attr("href", "#");
+            navTitle.text("Star Wars RPG");
+            $(navBar).append(navTitle);
+
+            var directionsElem = $("<div>");
+            directionsElem.attr("id", "directionsElem");
+            directionsElem.attr("class", "row m-1");
+            $(pageContainer).append(directionsElem);
+
+            var directionsText = $("<div>");
+            directionsText.attr("id", "directionsText");
+            directionsText.attr("class", "col text-center");
+            $(directionsElem).append(directionsText);
+            
+            var selectElement = $("<div>");
+            selectElement.attr("id", "selectElem");
+            selectElement.attr("class", "row my-1 px-5 justify-content-center");
+            $(pageContainer).append(selectElement);
+            
+            var enemyElement = $("<div>");
+            enemyElement.attr("id", "enemyElem");
+            enemyElement.attr("class", "row my-1 justify-content-center");
+            $(pageContainer).append(enemyElement);
+            
+            var playerElement = $("<div>");
+            playerElement.attr("id", "playerElem");
+            playerElement.attr("class", "row my-3 justify-content-center");
+            $(pageContainer).append(playerElement);
+
+            var fightElement = $("<div>");
+            fightElement.attr("id", "fightElem");
+            fightElement.attr("class", "row justify-content-center");
+            $(pageContainer).append(fightElement);
+
+            var defenderElement = $("<div>");
+            defenderElement.attr("id", "defenderElem");
+            defenderElement.attr("class", "row justify-content-center");
+            $(pageContainer).append(defenderElement);
+
+            var statusElement = $("<div>");
+            statusElement.attr("id", "statusElem");
+            statusElement.attr("class", "row my-1 justify-content-center");
+            $(pageContainer).append(statusElement);
+
+            var playerStats = $("<div>");
+            playerStats.attr("id", "playerStats");
+            playerStats.attr("class", "col-12 text-center");
+            $(statusElement).append(playerStats);
+
+            var enemyStats = $("<div>");
+            enemyStats.attr("id", "enemyStats");
+            playerStats.attr("class", "col-12 text-center");
+            $(statusElement).append(enemyStats);
+        },
         createCharacterCard : function (code, name, hp) {
             //declare variables
             var charImage = "./assets/images/"+code+".png";
@@ -204,7 +271,7 @@ var game = {
             reset.attr("onClick", "game.functions.gameReset()");
             reset.attr("class", "btn btn-primary btn-block");
             reset.text("Play Again");
-            $("#fightElem").append(reset);
+            $("#buttonContainer").append(reset);
         },
         createAttackButton: function () {
             
@@ -213,6 +280,10 @@ var game = {
                 $("#fight-button").show();
 
             } else {
+                var buttonContainer = $("<div>");
+                buttonContainer.attr("id", "buttonContainer");
+                buttonContainer.attr("class", "col-6 col-sm-3");
+                $("#fightElem").append(buttonContainer);
                 $("#"+game.data.currentEnemy.code).attr("class", "col-6 col-sm-3 mx-md-auto char-container");
                 $("#"+game.data.currentEnemy.code).appendTo("#defenderElem");
                 var fightButton = $("<button>");
@@ -222,7 +293,7 @@ var game = {
                 fightButton.attr("onClick", "game.functions.attack()");
                 fightButton.attr("class", "btn btn-primary btn-block");
                 fightButton.text("Attack");
-                $("#fightElem").append(fightButton);
+                $("#buttonContainer").append(fightButton);
                 
             }
         },
@@ -231,62 +302,70 @@ var game = {
                 game.functions.createResetButton();
               }
         },
-        attack : function () {    
+        attack : function () { 
+
             var player = game.data.playerCharacter.code;
             var playerHP = game.data.playerCharacter.hp;
             var playerBaseAttack = game.data.playerCharacter.baseAttack;
             var playerAttack = game.data.playerCharacter.attack;
             var playerName = game.data.playerName;
-                
-            //$("#fight-button").on("click", function () {
-                var enemy = game.data.currentEnemy.code;
-                var enemyCounterAttack = game.data.currentEnemy.attack;
-                var enemyName = game.data.currentEnemy.name;
+            var enemy = game.data.currentEnemy.code;
+            var enemyCounterAttack = game.data.currentEnemy.attack;
+            var enemyName = game.data.currentEnemy.name;
 
-                game.data.currentEnemy.hp += -playerAttack;
-                game.data.playerCharacter.hp += -enemyCounterAttack;
-                game.data.playerCharacter.attack += playerBaseAttack;
+            game.data.currentEnemy.hp += -playerAttack;
+            game.data.playerCharacter.hp += -enemyCounterAttack;
+            game.data.playerCharacter.attack += playerBaseAttack;
 
-                console.log(enemy+", HP: "+game.data.currentEnemy.hp+", Attack: "+enemyCounterAttack);
-                console.log(player+", HP: "+playerHP+", Attack: "+playerAttack);                
+            console.log(enemy+", HP: "+game.data.currentEnemy.hp+", Attack: "+enemyCounterAttack);
+            console.log(player+", HP: "+playerHP+", Attack: "+playerAttack);                
                 
-                if (game.data.currentEnemy.hp <= 0) {
-                    game.data.currentEnemy.hp = 0;
-                    game.functions.enemyReset(); 
-                    $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
-                    $("#charCardHP-"+player).text(playerHP);
-                    alert(player+" WINS!!!");
-                    $("#"+enemy).remove();
-                    $("#fight-button").hide();
-                    $("#enemyElem").show();
-                    $("#selectElemTitle").show();
-                    game.functions.checkWin();
-                    console.log(enemy);                   
-                } else if (playerHP <= 0) {
-                    playerHP = 0;
-                    $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
-                    $("#charCardHP-"+player).text(playerHP);
-                    alert(enemyName+" WINS!!!");
-                    $("#fight-button").remove();
-                    game.functions.createResetButton();
-                } else {             
-                    $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
-                    $("#charCardHP-"+player).text(playerHP);
-                    $("#playerStats").text("You attacked "+enemyName+" for "+playerAttack+" damage.");
-                    $("#enemyStats").text(enemyName+" attacked you back for "+enemyCounterAttack+" damage.");
-                }
+            if (game.data.currentEnemy.hp <= 0) {
+
+                game.data.currentEnemy.hp = 0;
+                game.functions.enemyReset(); 
+                $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
+                $("#charCardHP-"+player).text(playerHP);
+                $("#playerStats").text(enemyName+" defeated !!!");
+                //$("#enemyStats").text(enemyName+" attacked you back for "+enemyCounterAttack+" damage.");
+                alert(player+" WINS!!!");
+                $("#"+enemy).remove();
+                $("#fight-button").hide();
+                $("#enemyElem").show();
+                $("#selectElemTitle").show();
+                game.functions.checkWin();
+                console.log(enemy);
+
+            } else if (playerHP <= 0) {
+
+                playerHP = 0;
+                $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
+                $("#charCardHP-"+player).text(playerHP);
+                $("#playerStats").text("You attacked "+enemyName+" for "+playerAttack+" damage.");
+                $("#enemyStats").text(enemyName+" attacked you back for "+enemyCounterAttack+" damage.");
+                alert(enemyName+" WINS!!!");
+                $("#fight-button").remove();
+                game.functions.createResetButton();
+
+            } else {       
+
+                $("#charCardHP-"+enemy).text(game.data.currentEnemy.hp);
+                $("#charCardHP-"+player).text(game.data.playerCharacter.hp );
+                $("#playerStats").text("You attacked "+enemyName+" for "+playerAttack+" damage.");
+                $("#enemyStats").text(enemyName+" attacked you back for "+enemyCounterAttack+" damage.");
+
+            }
                 
-            //})
         },
         
     }
 }
 
 $(document).ready(function(){
-    
+
+    game.functions.gameinit();
     game.functions.charsToSelectElem();
-    game.functions.enemySelect();
     game.functions.playerSelect();
-    //game.functions.attack();
-   
+    game.functions.enemySelect();
+    
 });

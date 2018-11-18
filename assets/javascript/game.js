@@ -57,146 +57,152 @@ var game = {
     ],
     functions: {
         create: {
+            newElement: function (type, id, destination){
+                var newElement = $("<" + type + ">");
+                newElement.attr("id", id);
+                $(destination).append(newElement);
+                return newElement;
+            },
             gameContainer: function () {
+                //find destination
                 var gameContainer = $("#game");
+                //convert game destination to game container by changing id and class
                 gameContainer.attr("id", "gameContainer");
                 gameContainer.attr("class", "container-fluid px-0");
             },
             instrucitonsElement: function () {
-                var instructionsElement = $("<div>");
-                instructionsElement.attr("id", "instructionsElement");
-                instructionsElement.attr("class", "row m-1");
-                $("#gameContainer").append(instructionsElement);
+                //create element
+                var element = game.functions.create.newElement("div", "instructionsElement", "#gameContainer");
+                //style element
+                $(element).attr("class", "row m-1");
+                //append child content
                 game.functions.create.instructionsTextElement();
             },
             instructionsTextElement: function () {
-                var instructionsTextElement = $("<p>");
-                instructionsTextElement.attr("id", "instructionsTextElement");
-                instructionsTextElement.attr("class", "col text-center");
-                $("#instructionsElement").append(instructionsTextElement);
-                $("#instructionsTextElement").text("Choose Your Character");
+                //create element
+                var element = game.functions.create.newElement("div", "instructionsTextElement", "#instructionsElement");
+                //style element
+                $(element).attr("class", "col text-center");
+                //add starting instructions
+                game.functions.update.instructionsTextElement("Choose Your Character");
             },
             selectElement: function () {
-                var selectElement = $("<div>");
-                selectElement.attr("id", "selectElem");
-                selectElement.attr("class", "row my-1 px-5 justify-content-center");
-                $("#gameContainer").append(selectElement);
+                //create element
+                var element = game.functions.create.newElement("div", "selectElement", "#gameContainer");
+                //style element
+                $(element).attr("class", "row my-1 px-5 justify-content-center");
             },
             fightElement: function (){
-                var fightElement = $("<div>");
-                fightElement.attr("id", "fightElement");
-                fightElement.attr("class", "row my-3 justify-content-center");
-                $("#gameContainer").append(fightElement);
-
+                //create element
+                var element = game.functions.create.newElement("div", "fightElement", "#gameContainer");
+                //style element
+                $(element).attr("class", "row my-3 justify-content-center");
+                //append child content
                 game.functions.create.playerElement();
                 game.functions.create.attackElement();
                 game.functions.create.defenderElement();
             },
             playerElement: function () {
-                var playerElement = $("<div>");
-                playerElement.attr("id", "playerElem");
-                playerElement.attr("class", "col-4");
-                $("#fightElement").append(playerElement);
+                //create element
+                var element = game.functions.create.newElement("div", "playerElement", "#fightElement");
+                //style element
+                $(element).attr("class", "col-4");
             },
             defenderElement: function () {
-                var defenderElement = $("<div>");
-                defenderElement.attr("id", "defenderElem");
-                defenderElement.attr("class", "col-4");
-                $("#fightElement").append(defenderElement);
+                //create element
+                var element = game.functions.create.newElement("div", "defenderElement", "#fightElement");
+                //style element
+                $(element).attr("class", "col-4");
             },
             tempAttackElement: function () {
-                var tempAttackElement = $("<div>");
-                tempAttackElement.attr("id", "tempAttackElement");
-                tempAttackElement.attr("class", "row my-1 justify-content-center");
-                $("#gameContainer").append(tempAttackElement);
+                //create element
+                var element = game.functions.create.newElement("div", "tempAttackElement", "#gameContainer");
+                //style element
+                $(element).attr("class", "row my-1 justify-content-center");
+                //append child content
                 game.functions.create.attackElement();
             },
             attackElement: function () {
-                var attackElement = $("<div>");
-                attackElement.attr("id", "attackElement");
-                attackElement.attr("class", "col-4");
-                $("#tempAttackElement").append(attackElement);
+                //create element
+                var element = game.functions.create.newElement("div", "attackElement", "#tempAttackElement");
+                //style element
+                $(element).attr("class", "col-4");
             },
-            
             statusElement: function () {
-                var statusElement = $("<div>");
-                statusElement.attr("id", "statusElem");
-                statusElement.attr("class", "row my-1 justify-content-center");
-                $("#gameContainer").append(statusElement);
-
+                //create element
+                var element = game.functions.create.newElement("div", "statusElement", "#gameContainer");
+                //style element
+                $(element).attr("class", "row my-1 justify-content-center");
+                //append child content
                 game.functions.create.playerStatusElement();
                 game.functions.create.opponentStatusElement();
             },
             playerStatusElement: function () {
-                var playerStats = $("<p>");
-                playerStats.attr("id", "playerStatusElement");
-                playerStats.attr("class", "col-12 text-center");
-                $("#statusElem").append(playerStats);
+                //create element
+                var element = game.functions.create.newElement("p", "playerStatusElement", "#statusElement");
+                //style element
+                $(element).attr("class", "col-12 text-center");
             },
             opponentStatusElement: function () {
-                var enemyStats = $("<p>");
-                enemyStats.attr("id", "opponentStatusElement");
-                enemyStats.attr("class", "col-12 text-center");
-                $("#statusElem").append(enemyStats);
+                //create element
+                var element = game.functions.create.newElement("p", "opponentStatusElement", "#statusElement");
+                //style element
+                $(element).attr("class", "col-12 text-center");
             },
             characterContainer: function (charCode) {
-                //create column to hold character card
-                var charContainer = $("<div>");
-                charContainer.attr("id", charCode);
-                charContainer.attr("class", "col-6 col-sm-3 my-3 char-container");
-                $("#selectElem").append(charContainer);
+                //create element
+                var element = game.functions.create.newElement("div", charCode, "#selectElement");
+                //style element
+                $(element).attr("class", "col-6 col-sm-3 my-3 char-container");
             },
             characterCard: function (charCode) {
-                //create character card
-                var charCard = $("<div>");
-                charCard.attr("class", "char-card card h-100 my-2 text-center border-thick border-success rounded-0");
-                charCard.attr("id", "card-" + charCode);
-                $("#" + charCode).append(charCard);
+                //create element
+                var element = game.functions.create.newElement("div", "card-" + charCode, "#" + charCode);
+                //style element
+                $(element).attr("class", "char-card card h-100 my-2 text-center border-thick border-success rounded-0");
             },
             characterCardHeader: function (charCode) {
-                //create character card header
-                var charCardHeader = $("<div>");
-                charCardHeader.attr("class", "card-header py-1");
-                charCardHeader.attr("id", "charCardHeader-" + charCode);
-                $("#card-" + charCode).append(charCardHeader);
+                //create element
+                var element = game.functions.create.newElement("div", "charCardHeader-" + charCode, "#card-" + charCode);
+                //style element
+                $(element).attr("class", "card-header py-1");
             },
-            characterCardName: function (charCode, charName) {
-                //append character name to card header
-                var charCardTitle = $("<div>");
-                charCardTitle.attr("class", "card-title");
-                charCardTitle.attr("id", "charCardTitle-" + charCode);
-                charCardTitle.append(charName);
-                $("#charCardHeader-" + charCode).append(charCardTitle);
+            characterCardTitle: function (charCode, charName) {
+                //create element
+                var element = game.functions.create.newElement("p", "charCardTitle-" + charCode, "#charCardHeader-" + charCode);
+                //style element
+                $(element).attr("class", "card-title");
+                //add player name to 
+                $(element).text(charName);
             },
             characterCardBody: function (charCode) {
-                //create character card body
-                var charCardBody = $("<div>");
-                charCardBody.attr("class", "card-body p-0 bg-light");
-                charCardBody.attr("id", "charCardBody-" + charCode);
-                $("#card-" + charCode).append(charCardBody);
+                //create element
+                var element = game.functions.create.newElement("div", "charCardBody-" + charCode, "#card-" + charCode);
+                //style element
+                $(element).attr("class", "card-body p-0 bg-light");
             },
             characterCardImage: function (charCode) {
-                //append character image to card body
-                var charCardImage = $("<img>");
-                var charImage = "./assets/images/" + charCode + ".png";
-                charCardImage.attr("class", "card-image img-fluid");
-                charCardImage.attr("src", charImage);
-                $("#charCardBody-" + charCode).append(charCardImage);
+                //create element
+                var element = game.functions.create.newElement("img", "charCardBody-" + charCode, "#charCardBody-" + charCode);
+                //style element
+                $(element).attr({
+                    "class": "card-image img-fluid", 
+                    "src": "./assets/images/" + charCode + ".png"
+                });
             },
             characterCardFooter: function (charCode) {
-                //create character card footer
-                var charCardFooter = $("<div>");
-                charCardFooter.attr("class", "card-footer py-1");
-                charCardFooter.attr("id", "charCardFooter-" + charCode);
-                $("#card-" + charCode).append(charCardFooter);
+                //create element
+                var element = game.functions.create.newElement("div", "charCardFooter-" + charCode, "#card-" + charCode);
+                //style element
+                $(element).attr("class", "card-footer py-1");
             },
             characterCardHP: function (charCode, charHP) {
-                //append character HP to card footer
-                var charCardHP = $("<div>");
-                charCardHP.attr("class", "");
-                charCardHP.attr("id", "charCardHP-" + charCode);
-                charCardHP.text(charHP);
-                $("#charCardFooter-" + charCode).append(charCardHP);
+                //create element
+                var element = game.functions.create.newElement("div", "charCardHP-" + charCode, "#charCardFooter-" + charCode);
+                //style element
+                $(element).attr("class", "");
+                //add player HP
+                $(element).text(charHP);
             },
             character: function (characterCode, characterName, characterHP) {
                 game.functions.create.characterContainer(characterCode);
@@ -204,69 +210,102 @@ var game = {
                 game.functions.create.characterCardHeader(characterCode);
                 game.functions.create.characterCardBody(characterCode);
                 game.functions.create.characterCardFooter(characterCode);
-                game.functions.create.characterCardName(characterCode, characterName);
+                game.functions.create.characterCardTitle(characterCode, characterName);
                 game.functions.create.characterCardImage(characterCode);
                 game.functions.create.characterCardHP(characterCode, characterHP);
 
             },
-            winModal: function () {
-                var winModal = $("<div>");
-                winModal.attr("class", "modal fade");
-                winModal.attr("id", "winModal");
-                winModal.attr("tabindex", "-1");
-                winModal.attr("role", "dialog");
-                winModal.attr("aria-labelledby", "winModalCenterTitle");
-                winModal.attr("aria-hidden", "true");
-                $("#gameContainer").append(winModal);
-                game.functions.create.winModalDialogue();
+            gameModal: function () {
+                var gameModal = $("<div>");
+                gameModal.attr("class", "modal fade");
+                gameModal.attr("id", "gameModal");
+                gameModal.attr("tabindex", "-1");
+                gameModal.attr("role", "dialog");
+                gameModal.attr("aria-labelledby", "modalCenterTitle");
+                gameModal.attr("aria-hidden", "true");
+                $("#gameContainer").append(gameModal);
+                game.functions.create.gameModalDialogue();
                 
                 
             },
-            winModalDialogue: function () {
-                var winModalDialogue = $("<div>");
-                winModalDialogue.attr("id", "winModalDialogue");
-                winModalDialogue.attr("class", "modal-dialog modal-dialog-centered");
-                winModalDialogue.attr("role", "document");
-                $("#winModal").append(winModalDialogue);
-                game.functions.create.winModalContent();
+            gameModalDialogue: function () {
+                var gameModalDialogue = $("<div>");
+                gameModalDialogue.attr("id", "gameModalDialogue");
+                gameModalDialogue.attr("class", "modal-dialog modal-dialog-centered");
+                gameModalDialogue.attr("role", "document");
+                $("#gameModal").append(gameModalDialogue);
+                game.functions.create.gameModalContent();
             },
-            winModalContent: function () {
-                var winModalContent = $("<div>");
-                winModalContent.attr("id", "winModalContent");
-                winModalContent.attr("class", "modal-content");
+            gameModalContent: function () {
+                var gameModalContent = $("<div>");
+                gameModalContent.attr("id", "gameModalContent");
+                gameModalContent.attr("class", "modal-content");
+                $("#gameModalDialogue").append(gameModalContent);
+                game.functions.create.gameModalHeader();
+                game.functions.create.gameModalBody();
+                game.functions.create.gameModalFooter();
+            },
+            gameModalHeader: function (){
+                var gameModalHeader = $("<div>");
+                gameModalHeader.attr("id", "gameModalHeader");
+                gameModalHeader.attr("class", "modal-header");
+                $("#gameModalContent").append(gameModalHeader);
+                game.functions.create.gameModalTitle();
+                game.functions.create.gameModalCloseButton();
+            },
+            gameModalTitle: function (){
+                var gameModalTitle = $("<p>");
+                gameModalTitle.attr("id", "gameModalTitle");
+                gameModalTitle.attr("class", "modal-title");
+                $("#gameModalHeader").append(gameModalTitle);
                 
-                $("#winModalDialogue").append(winModalContent);
-                game.functions.create.winModalHeader();
-                game.functions.create.winModalBody();
-                game.functions.create.winModalFooter();
             },
-            winModalHeader: function (){
-                var winModalHeader = $("<div>");
-                winModalHeader.attr("id", "winModalHeader");
-                winModalHeader.attr("class", "modal-header");
-                winModalHeader.text(game.state.opponent.name + " was Defeated!!!");
-                $("#winModalContent").append(winModalHeader);
+            gameModalCloseButton: function (){
+                var gameModalCloseButton = $("<button>");
+                gameModalCloseButton.attr("type", "button");
+                gameModalCloseButton.attr("id", "gameModalCloseButton");
+                gameModalCloseButton.attr("class", "close");
+                gameModalCloseButton.attr("data-dismiss", "modal");
+                gameModalCloseButton.attr("aria-label", "Close");
+                $("#gameModalHeader").append(gameModalCloseButton);
+                game.functions.create.closeIcon("#gameModalCloseButton");
             },
-            winModalBody: function (){
-                var winModalBody = $("<div>");
-                winModalBody.attr("id", "winModalBody");
-                winModalBody.attr("class", "modal-body");
-                winModalBody.text("Something");
-                $("#winModalContent").append(winModalBody);
+            closeIcon: function (destination){
+                var closeIcon = $("<span>");
+                closeIcon.attr("aria-hidden", "true");
+                closeIcon.html("&times;");
+                $(destination).append(closeIcon);
             },
-            winModalFooter: function (){
-                var winModalFooter = $("<div>");
-                winModalFooter.attr("id", "winModalFooter");
-                winModalFooter.attr("class", "modal-footer");
-            
-                $("#winModalContent").append(winModalBody);
+            gameModalBody: function (){
+                var gameModalBody = $("<div>");
+                gameModalBody.attr("id", "gameModalBody");
+                gameModalBody.attr("class", "modal-body");
+                $("#gameModalContent").append(gameModalBody);
+            },
+            gameModalBodyText: function (){
+                var gameModalBodyText = $("<p>");
+                gameModalBodyText.attr("id", "gameModalBody");
+                gameModalBodyText.attr("class", "modal-body");
+                $("#gameModalBody").append(gameModalBodyText);
+            },
+            gameModalFooter: function (){
+                var gameModalFooter = $("<div>");
+                gameModalFooter.attr("id", "gameModalFooter");
+                gameModalFooter.attr("class", "modal-footer");
+                $("#gameModalContent").append(gameModalFooter);
+            },
+            gameModalFooterButton: function (){
+                var gameModalFooterText = $("<p>");
+                gameModalFooterText.attr("id", "gameModalFooterText");
+                gameModalFooterText.attr("class", "modal-footer");
+                $("#gameModalFooter").append(gameModalFooterText);
             },
             attackButton: function () {
 
                 if ($("#fight-button").length) {
 
                     $("#attackElement").show();
-                    $("#playerElem").attr("class", "col-4");
+                    $("#playerElement").attr("class", "col-4");
 
                 } else {
                     var buttonContainer = $("<div>");
@@ -274,7 +313,7 @@ var game = {
                     buttonContainer.attr("class", "col-12");
                     $("#attackElement").append(buttonContainer);
                     $("#" + game.state.opponent.code).attr("class", "col-12 mx-md-auto char-container");
-                    $("#" + game.state.opponent.code).appendTo("#defenderElem");
+                    $("#" + game.state.opponent.code).appendTo("#defenderElement");
                     var fightButton = $("<button>");
                     fightButton.attr("id", "fight-button");
                     fightButton.attr("data-toggle", "none");
@@ -288,8 +327,7 @@ var game = {
             },
             resetButton: function () {
                 $("#attackElement").show();
-                $("#playerElem").attr("class", "col-4");
-                
+                $("#playerElement").attr("class", "col-4");
                 var reset = $("<button>");
                 reset.attr("id", "reset-button");
                 reset.attr("data-toggle", "none");
@@ -311,6 +349,13 @@ var game = {
             opponentStatusElement: function (string) {
                 $("#opponentStatusElement").text(string);
             },
+            gameModalTitle: function (string){
+                $("#gameModalTitle").text(string);
+            },
+            gameModalBodyText: function (string){
+                $("#gameModalHeader").text(string);
+            },
+            
 
         },
         reset: {},
@@ -324,6 +369,7 @@ var game = {
             //game.functions.create.attackElement();
             //game.functions.create.defenderElement();
             game.functions.create.statusElement();
+            game.functions.create.gameModal();
             game.functions.charsToSelectElement();
             
         },
@@ -348,7 +394,7 @@ var game = {
                     game.state.player.code = selectedPlayerCode;
                     //move selected player card to to player character container and adjust styling
                     $("#" + game.state.player.code).attr("class", "col-12 mx-md-auto char-container");
-                    $("#" + game.state.player.code).appendTo("#playerElem");
+                    $("#" + game.state.player.code).appendTo("#playerElement");
                     //loop through array to populate the player character and enemy character elements
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
@@ -386,9 +432,9 @@ var game = {
                     game.state.opponent.code = selectedPlayerCode;
                     console.log("#" + game.state.opponent.code);
                     $("#"+game.state.opponent.code).attr("class", "col-12 mx-md-auto char-container");
-                    $("#" + game.state.opponent.code).appendTo("#defenderElem");
+                    $("#" + game.state.opponent.code).appendTo("#defenderElement");
                     game.functions.update.instructionsTextElement("FIGHT!!!");
-                    $("#selectElem").hide();
+                    $("#selectElement").hide();
                     for (var i = 0; i < game.characters.length; i++) {
                         var charCode = game.characters[i].code;
                         if (charCode === game.state.opponent.code) {
@@ -414,20 +460,20 @@ var game = {
             location.reload();
         },
         checkWin: function () {
-            if ($('#selectElem').is(':empty')) {
+            if ($('#selectElement').is(':empty')) {
                 game.functions.create.resetButton();
                 $("#fight-button").hide();
                 game.functions.update.playerStatusElement("");
                 game.functions.update.opponentStatusElement("");
-                $("#playerElem").attr("class", "col-4 offset-4");
+                $("#playerElement").attr("class", "col-4 offset-4");
                 $("#instructionsTextElement").text("Great Game! How 'bout Another?");
             }
         },
         opponentDefeated: function (oppCode, oppHP, oppName, plyrCode, plyrHP) {
             $("#attackElement").hide();
-            $("#playerElem").attr("class", "col-4 offset-4");
-            game.functions.create.winModal();
-            $("#winModal").modal("show");
+            $("#playerElement").attr("class", "col-4 offset-4");
+            game.functions.update.gameModalTitle(oppName + " was defeated!!!")
+            $("#gameModal").modal("show");
             oppHP = 0;
             $("#charCardHP-" + oppCode).text(oppHP);
             $("#charCardHP-" + plyrCode).text(plyrHP);
@@ -436,7 +482,8 @@ var game = {
             $("#" + oppCode).remove();
             game.functions.update.instructionsTextElement("Remaining Opponents");
             game.functions.checkWin();
-            $("#selectElem").show();
+            $("#gameModal").modal("show");
+            $("#selectElement").show();
             
             game.functions.enemyReset();
         },
